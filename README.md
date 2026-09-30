@@ -1,5 +1,7 @@
 # 📬 Agents Mail
 
+![Agents Mail: an email inbox for AI agents on Cloudflare Workers, D1 and R2](assets/agents-mail.jpg)
+
 > A mailbox for AI agents on Cloudflare. Receive, search, read and send email over MCP or REST, behind one token.
 
 ## ✨ Features
