@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.0.1 - 2026-09-30
+
 - Catch-all inbox on Cloudflare Email Routing: emails in D1, attachments in R2, full addressing kept, including the SMTP recipient.
 - Send through the Cloudflare Email Service binding with named addresses, cc, bcc, reply-to and attachments; html-only mail gets a plain-text part, and every outgoing email is validated.
 - Reply (or reply all) in the thread, with a `to` override, and forward with attachments; send results list the recipients used.

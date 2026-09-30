@@ -4,7 +4,7 @@ description: Read, search, wait for, send, reply to, forward and delete email th
 license: MIT
 compatibility: Needs an agents-mail deployment and its bearer token. Setup needs Bun and a Cloudflare account on Workers Paid with a domain on Cloudflare DNS.
 metadata:
-  version: "0.0.0"
+  version: "0.0.1"
 ---
 
 # Agents Mail
