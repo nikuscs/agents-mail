@@ -1,0 +1,43 @@
+{
+  "name": "agents-mail-repo",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "packageManager": "bun@1.4.2",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev --log-prefix=none",
+    "check": "turbo run check",
+    "test": "turbo run test",
+    "lint": "turbo run lint --continue && oxlint scripts oxlint.config.ts -c ./oxlint.config.ts --disable-nested-config",
+    "lint:fix": "turbo run lint:fix --continue && oxlint scripts oxlint.config.ts -c ./oxlint.config.ts --disable-nested-config --fix",
+    "deploy": "bun scripts/worker-deploy.ts",
+    "release": "bun scripts/utils-release.ts",
+    "release:minor": "bun scripts/utils-release.ts minor",
+    "release:major": "bun scripts/utils-release.ts major",
+    "release:dry-run": "bun scripts/utils-release.ts --dry-run"
+  },
+  "devDependencies": {
+    "@eslint-community/eslint-plugin-eslint-comments": "^4.8.1",
+    "@oxlint/plugins": "1.86.0",
+    "@regru/eslint-plugin-prefer-early-return": "^1.0.0",
+    "@types/bun": "^1.4.2",
+    "@types/node": "^26.6.3",
+    "bumpp": "^12.3.0",
+    "cf": "1.0.0-beta.5",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-perfectionist": "^5.12.1",
+    "eslint-plugin-unused-imports": "^4.4.1",
+    "oxlint": "1.86.0",
+    "oxlint-plugin-arch": "^0.3.4",
+    "oxlint-plugin-eslint": "1.86.0",
+    "oxlint-tsgolint": "^7.0.2003",
+    "turbo": "^2.11.5"
+  },
+  "overrides": {
+    "sharp": "^0.35.4",
+    "undici": "^7.29.1"
+  }
+}

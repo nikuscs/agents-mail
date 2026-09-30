@@ -1,0 +1,34 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "agents-mail-worker",
+  "main": "src/worker.ts",
+  "compatibility_date": "2026-08-22",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true },
+  "vars": {
+    "AGENTS_MAIL_WAIT_MAX": "120",
+    "AGENTS_MAIL_WAIT_INTERVAL": "3",
+    "AGENTS_MAIL_RETENTION_DAYS": "0",
+    "AGENTS_MAIL_ACCEPT": "",
+    "AGENTS_MAIL_INBOUND_LIMIT": "1000"
+  },
+  "triggers": { "crons": ["0 * * * *"] },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "agents-mail-database",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "BUCKET",
+      "bucket_name": "agents-mail-attachments"
+    }
+  ],
+  "send_email": [
+    {
+      "name": "EMAIL"
+    }
+  ]
+}

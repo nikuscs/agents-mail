@@ -1,0 +1,5 @@
+AGENTS_MAIL_TOKEN=dev-only-token-change-me-0123456789abcdef
+AGENTS_MAIL_READ_TOKEN=
+AGENTS_MAIL_FROM="Agent <agent@example.com>"
+AGENTS_MAIL_JEV=false
+AGENTS_MAIL_JEV_KEY=

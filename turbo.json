@@ -1,0 +1,46 @@
+{
+  "$schema": "https://turborepo.dev/schema.json",
+  "ui": "stream",
+  "agentGuidance": false,
+  "tasks": {
+    "types": {
+      "inputs": [
+        "wrangler.jsonc",
+        ".dev.vars"
+      ],
+      "outputs": [
+        "worker-configuration.d.ts"
+      ]
+    },
+    "dev": {
+      "persistent": true,
+      "cache": false
+    },
+    "check": {
+      "dependsOn": [
+        "types"
+      ]
+    },
+    "lint": {
+      "dependsOn": [
+        "types"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "../../oxlint.config.ts"
+      ]
+    },
+    "lint:fix": {
+      "dependsOn": [
+        "types"
+      ],
+      "cache": false
+    },
+    "test": {
+      "dependsOn": [
+        "types"
+      ],
+      "outputs": []
+    }
+  }
+}
