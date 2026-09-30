@@ -4,12 +4,17 @@ on:
   push:
     tags: ["v*.*.*"]
 
-permissions:
-  contents: read
+permissions: {}
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   check:
     uses: ./.github/workflows/ci.yml
+    permissions:
+      contents: read
 
   release:
     name: GitHub release

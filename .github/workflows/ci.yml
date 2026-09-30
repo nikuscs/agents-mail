@@ -6,13 +6,14 @@ on:
   pull_request:
   workflow_call:
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
   check:
     name: ${{ matrix.task }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     timeout-minutes: 15
     strategy:
       fail-fast: false
