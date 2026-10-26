@@ -61,7 +61,7 @@ export function failing<T extends object>(target: T, method: keyof T, after = 0)
 export function makeJev(...answers: [string, number][]) {
   const requests: { state: Record<string, string> }[] = [];
 
-  const fetch: Types.Deps["fetch"] = async (_input, init) => {
+  const fetch: Types.WorkerDeps["fetch"] = async (_input, init) => {
     requests.push(await new Response(init?.body).json());
 
     const [category, injection] = answers.shift() ?? [];

@@ -82,7 +82,7 @@ export async function mcp(method: string, params = {}, bindings: Env = env) {
 }
 
 export async function inbox() {
-  const [summary] = (await (await request("/emails?direction=in&include=suspicious")).json<Types.ListResult>()).emails;
+  const [summary] = (await (await request("/emails?direction=in&include=suspicious")).json<Types.WorkerListResult>()).emails;
 
-  return (await request(`/emails/${summary?.id ?? ""}?html=true`)).json<Types.Email>();
+  return (await request(`/emails/${summary?.id ?? ""}?html=true`)).json<Types.WorkerEmail>();
 }

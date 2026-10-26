@@ -9,7 +9,6 @@ export default preset({
     },
     "apps/worker": { types: { colocated: ["apps/worker/src/worker.types.ts"] } },
     "apps/worker/src": {
-      naming: { exports: false },
       rules: { "no-console": ["error", { allow: ["error"] }] },
     },
     scripts: { rules: { "no-alert": "off" } },

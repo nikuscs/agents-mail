@@ -6,7 +6,8 @@ A Cloudflare Worker that gives AI agents a mailbox: REST and MCP, behind one bea
 
 - The Worker lives in `apps/worker/src/`, one file per layer: `database.ts` (`makeDatabase`), `storage.ts` (`makeStorage`), `outbox.ts` (`makeOutbox`), `classifier.ts` (`makeClassifier`), `mail.ts` (`makeMail`), and `worker.ts` with `makeMcp` and the Hono app. Types and zod schemas live in `worker.types.ts`, the only file that imports `zod`; constants in `worker.constants.ts`, pure helpers in `worker.utils.ts`.
 - Method names are single words, Laravel style: `list`, `get`, `send`, `destroy`.
-- Types take the method's name: `send()` takes `SendParams` and returns `SendResult`, validated by the `sendParams` schema.
+- Exports from `worker.types.ts`, `worker.constants.ts` and `worker.utils.ts` start with `worker` (`WorkerSendParams`, `WORKER_MAX_HEADER`, `workerClip`), as the lint preset requires.
+- Types take the method's name: `send()` takes `WorkerSendParams` and returns `WorkerSendResult`, validated by the `workerSendParams` schema.
 - The code explains itself, so it carries no comments.
 - A function with one caller is inlined at that caller, and so is one with two callers and at most 3 lines. The `make*` layers stay: they are the seams tests inject fakes through.
 
@@ -23,7 +24,7 @@ A Cloudflare Worker that gives AI agents a mailbox: REST and MCP, behind one bea
 - Deploys go through `bun run deploy` (`scripts/worker-deploy.ts`), which owns secrets, D1, R2 and email setup. Keep it idempotent: every step checks before it changes anything.
 - `compatibility_date` stays at or below the newest date `@cloudflare/vitest-pool-workers` supports, or the tests won't start.
 - Change the database with a new file in `migrations/`. Applied migrations stay untouched.
-- Inbound mail is attacker-controlled: size every stored field in bytes with `clip()`, and keep new limits in `worker.constants.ts`.
+- Inbound mail is attacker-controlled: size every stored field in bytes with `workerClip()`, and keep new limits in `worker.constants.ts`.
 
 ## Releases
 

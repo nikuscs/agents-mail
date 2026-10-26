@@ -10,7 +10,7 @@ export function makeOutbox(binding: SendEmail) {
 
         return messageId;
       } catch (error) {
-        const failure = Types.sendFailure.safeParse(error);
+        const failure = Types.workerSendFailure.safeParse(error);
 
         if (!failure.success) {
           throw error;
@@ -18,7 +18,7 @@ export function makeOutbox(binding: SendEmail) {
 
         const { code, message: reason } = failure.data;
 
-        throw Utils.problem(Constants.SEND_STATUS.get(code) ?? 400, reason, code);
+        throw Utils.workerProblem(Constants.WORKER_SEND_STATUS.get(code) ?? 400, reason, code);
       }
     },
   };

@@ -3,12 +3,12 @@ import type * as Types from "./worker.types";
 
 export function makeStorage(bucket: R2Bucket) {
   return {
-    async put(params: Types.PutParams): Promise<void> {
+    async put(params: Types.WorkerPutParams): Promise<void> {
       const disposition = params.filename
         ? `attachment; filename*=UTF-8''${encodeURIComponent(params.filename).replaceAll(/['()*]/g, (char) => `%${char.charCodeAt(0).toString(16).toUpperCase()}`)}`
         : "attachment";
 
-      await bucket.put(Utils.key(params.emailId, params.id), params.content, {
+      await bucket.put(Utils.workerKey(params.emailId, params.id), params.content, {
         httpMetadata: {
           contentType: params.mimeType ?? undefined,
           contentDisposition: disposition,
@@ -16,8 +16,8 @@ export function makeStorage(bucket: R2Bucket) {
       });
     },
 
-    get(params: Types.DownloadParams): Promise<R2ObjectBody | null> {
-      return bucket.get(Utils.key(params.id, params.attachment));
+    get(params: Types.WorkerDownloadParams): Promise<R2ObjectBody | null> {
+      return bucket.get(Utils.workerKey(params.id, params.attachment));
     },
 
     async delete(keys: string[]): Promise<void> {

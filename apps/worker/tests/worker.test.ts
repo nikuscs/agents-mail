@@ -55,7 +55,7 @@ describe("emails", () => {
   test("stores, reads, downloads and deletes a received email", async () => {
     await receive();
 
-    const list = await (await request("/emails?direction=in")).json<Types.ListResult>();
+    const list = await (await request("/emails?direction=in")).json<Types.WorkerListResult>();
 
     expect(list.total).toBe(1);
     expect(list.emails[0]).toMatchObject({
@@ -65,7 +65,7 @@ describe("emails", () => {
     });
 
     const id = list.emails[0]?.id ?? "";
-    const email = await (await request(`/emails/${id}`)).json<Types.Email>();
+    const email = await (await request(`/emails/${id}`)).json<Types.WorkerEmail>();
 
     expect(email).toMatchObject({
       messageId: "<abc@example.org>",
@@ -89,8 +89,8 @@ describe("emails", () => {
     await receive();
     await receive(RAW.replace("Invoice 100% paid", "Invoice 1000 paid"));
 
-    const exact = await (await request("/emails?q=100%25")).json<Types.ListResult>();
-    const none = await (await request(`/emails?after=${new Date(Date.now() + 60_000).toISOString()}`)).json<Types.ListResult>();
+    const exact = await (await request("/emails?q=100%25")).json<Types.WorkerListResult>();
+    const none = await (await request(`/emails?after=${new Date(Date.now() + 60_000).toISOString()}`)).json<Types.WorkerListResult>();
     const long = await request(`/emails?q=${"a".repeat(120)}`);
 
     expect(exact.total).toBe(1);
@@ -167,7 +167,7 @@ describe("send", () => {
     expect(await response.json()).toMatchObject({ stored: true });
     expect(outbox.messages[0]).toMatchObject({ from: { name: "Agent", email: "agent@example.com" }, to: [{ name: "Bob", email: "bob@example.org" }, "ann@example.org"] });
 
-    const list = await (await request("/emails?direction=out&to=ANN@example.org")).json<Types.ListResult>();
+    const list = await (await request("/emails?direction=out&to=ANN@example.org")).json<Types.WorkerListResult>();
 
     expect(list.emails[0]).toMatchObject({ from: "agent@example.com", subject: "Hi" });
   });
@@ -181,8 +181,8 @@ describe("send", () => {
       html: "<h1>Report</h1><p>All <strong>green</strong>.</p>",
     }, { ...env, EMAIL: outbox.binding });
 
-    const { id } = await response.json<Types.SendResult>();
-    const email = await (await request(`/emails/${id}`)).json<Types.Email>();
+    const { id } = await response.json<Types.WorkerSendResult>();
+    const email = await (await request(`/emails/${id}`)).json<Types.WorkerEmail>();
 
     expect(outbox.messages[0]).toHaveProperty("text", expect.stringContaining("All green."));
     expect(email.text).toContain("All green.");
@@ -199,8 +199,8 @@ describe("send", () => {
       attachments: [{ filename: "a.txt", type: "text/plain", content: btoa("hello") }],
     }, bindings);
 
-    const { id } = await small.json<Types.SendResult>();
-    const email = await (await request(`/emails/${id}`)).json<Types.Email>();
+    const { id } = await small.json<Types.WorkerSendResult>();
+    const email = await (await request(`/emails/${id}`)).json<Types.WorkerEmail>();
 
     const big = await post("/emails", {
       to: "bob@example.org",
@@ -251,7 +251,7 @@ describe("threads", () => {
       headers: { "In-Reply-To": "<abc@example.org>", "References": "<root@example.org> <abc@example.org>" },
     });
 
-    const thread = await (await request(`/emails?thread=${encodeURIComponent("<root@example.org>")}`)).json<Types.ListResult>();
+    const thread = await (await request(`/emails?thread=${encodeURIComponent("<root@example.org>")}`)).json<Types.WorkerListResult>();
 
     expect(thread.total).toBe(3);
   });
@@ -272,8 +272,8 @@ describe("threads", () => {
     const email = await inbox();
 
     const response = await post(`/emails/${email.id}/forward`, { to: "boss@example.org", text: "FYI" }, { ...env, EMAIL: outbox.binding });
-    const { id, stored } = await response.json<Types.SendResult>();
-    const forwarded = await (await request(`/emails/${id}`)).json<Types.Email>();
+    const { id, stored } = await response.json<Types.WorkerSendResult>();
+    const forwarded = await (await request(`/emails/${id}`)).json<Types.WorkerEmail>();
 
     expect(stored).toBe(true);
     expect(forwarded.attachments).toMatchObject([{ filename: "note.txt" }]);
