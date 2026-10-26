@@ -9,15 +9,20 @@
   ],
   "scripts": {
     "dev": "turbo run dev --log-prefix=none",
-    "check": "turbo run check",
+    "check": "bun run typecheck && bun run lint && bun run lint:dead && bun run test",
+    "typecheck": "turbo run typecheck",
     "test": "turbo run test",
-    "lint": "turbo run lint --continue && oxlint scripts oxlint.config.ts -c ./oxlint.config.ts --disable-nested-config",
+    "lint": "turbo run lint --continue && oxlint scripts oxlint.config.ts -c ./oxlint.config.ts --disable-nested-config && bun run lint:cycles",
     "lint:fix": "turbo run lint:fix --continue && oxlint scripts oxlint.config.ts -c ./oxlint.config.ts --disable-nested-config --fix",
+    "lint:dead": "fallow dead-code",
+    "lint:cycles": "fallow architecture --cycles --fail-on-issues",
+    "agents:sync": "bun .agents/sync.ts",
     "deploy": "bun scripts/worker-deploy.ts",
     "release": "bun scripts/utils-release.ts",
+    "release:dry-run": "bun scripts/utils-release.ts --dry-run",
+    "release:patch": "bun scripts/utils-release.ts patch",
     "release:minor": "bun scripts/utils-release.ts minor",
-    "release:major": "bun scripts/utils-release.ts major",
-    "release:dry-run": "bun scripts/utils-release.ts --dry-run"
+    "release:major": "bun scripts/utils-release.ts major"
   },
   "devDependencies": {
     "@types/bun": "^1.4.2",
@@ -25,6 +30,7 @@
     "agents-mail": "workspace:*",
     "bumpp": "^12.3.0",
     "cf": "1.0.0-beta.5",
+    "fallow": "^3.36.0",
     "oxlint": "1.86.0",
     "oxlint-plugin-arch": "0.12.2",
     "oxlint-tsgolint": "^7.0.2003",

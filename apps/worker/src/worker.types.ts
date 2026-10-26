@@ -13,7 +13,7 @@ const LINE = /^[^\r\n]*$/;
 
 const MIME = /^[\w.+-]+\/[\w.+-]+$/;
 
-export const workerCategory = z.enum([
+const workerCategory = z.enum([
   "conversation",
   "transactional",
   "security",
@@ -156,10 +156,6 @@ export const workerSendFailure = z.object({
   code: z.string().startsWith("E_"),
   message: z.string(),
 });
-
-export type WorkerSendFailure = z.infer<typeof workerSendFailure>;
-
-export type WorkerFile = z.infer<typeof file>;
 
 export type WorkerAddresses = z.infer<typeof addresses>;
 

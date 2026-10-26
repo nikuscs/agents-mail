@@ -3,7 +3,7 @@
   "ui": "stream",
   "agentGuidance": false,
   "tasks": {
-    "types": {
+    "cf-typegen": {
       "inputs": [
         "wrangler.jsonc",
         ".dev.vars"
@@ -16,14 +16,14 @@
       "persistent": true,
       "cache": false
     },
-    "check": {
+    "typecheck": {
       "dependsOn": [
-        "types"
+        "cf-typegen"
       ]
     },
     "lint": {
       "dependsOn": [
-        "types"
+        "cf-typegen"
       ],
       "inputs": [
         "$TURBO_DEFAULT$",
@@ -32,13 +32,13 @@
     },
     "lint:fix": {
       "dependsOn": [
-        "types"
+        "cf-typegen"
       ],
       "cache": false
     },
     "test": {
       "dependsOn": [
-        "types"
+        "cf-typegen"
       ],
       "outputs": []
     }
