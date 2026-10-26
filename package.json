@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "dev": "turbo run dev --log-prefix=none",
-    "postinstall": "bun run agents:sync",
+    "postinstall": "test ! -f .agents/sync.ts || bun run agents:sync",
     "check": "bun run typecheck && bun run lint && bun run lint:dead && bun run test",
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
