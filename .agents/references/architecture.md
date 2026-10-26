@@ -46,7 +46,7 @@ Each layer is a `make*` factory that takes its binding or `env`; tests inject fa
 │   ├── src/worker.constants.ts         limits, SQL and fixed values
 │   ├── src/worker.utils.ts             pure helpers
 │   └── tests/
-│       ├── <area>.test.ts              handler tests
+│       ├── <source>[.<topic>].test.ts  tests of src/<source>.ts, through its handlers
 │       ├── client.ts                   calls the handlers
 │       ├── fakes.ts                    fake bindings and fetch
 │       └── setup.ts                    empties D1 and R2 before each test
