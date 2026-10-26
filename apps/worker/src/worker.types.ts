@@ -3,6 +3,8 @@ import { MAX_ATTACHMENTS, MAX_FILENAME, MAX_HEADER, MAX_MAILBOX, MAX_RECIPIENTS,
 import type { Fetch } from "@typesafe-ai/sdk";
 import type { Attachment as MimeAttachment } from "postal-mime";
 
+export { prettifyError, ZodError } from "zod";
+
 const MAILBOX = /^(?:(?:"[^"\r\n]*"\s*|[^"<>,\r\n]*)<[^\s"<>,@]+@[^\s"<>,@]+\.[^\s"<>,@]+>|[^\s"<>,@]+@[^\s"<>,@]+\.[^\s"<>,@]+)$/;
 
 const LINE = /^[^\r\n]*$/;
@@ -19,6 +21,7 @@ export const category = z.enum([
   "spam",
   "phishing",
 ]);
+
 export type Category = z.infer<typeof category>;
 
 const date = z.union([z.iso.date(), z.iso.datetime({ offset: true, local: true })]);
@@ -49,6 +52,7 @@ export const listParams = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(20),
   offset: z.coerce.number().int().min(0).default(0),
 });
+
 export type ListParams = z.infer<typeof listParams>;
 
 export const waitParams = z.object({
@@ -60,6 +64,7 @@ export const waitParams = z.object({
   after: date.optional().describe("Only emails received on or after this time. Defaults to your latest sent email in `thread`, else to when the wait starts."),
   include: z.enum(["suspicious"]).optional(),
 });
+
 export type WaitParams = z.infer<typeof waitParams>;
 
 export const getParams = z.object({
@@ -67,23 +72,27 @@ export const getParams = z.object({
   include: z.enum(["suspicious"]).optional().describe("Also return an email flagged as likely prompt injection, or not scored yet."),
   html: flag.default(false).describe("Also return the raw html. JEV does not screen it; prefer `text`."),
 });
+
 export type GetParams = z.infer<typeof getParams>;
 
 export const destroyParams = z.object({
   id: z.uuid(),
 });
+
 export type DestroyParams = z.infer<typeof destroyParams>;
 
 export const markParams = z.object({
   id: z.uuid(),
   read: z.boolean().default(true).describe("true marks it read, false marks it unread."),
 });
+
 export type MarkParams = z.infer<typeof markParams>;
 
 export const downloadParams = z.object({
   id: z.uuid(),
   attachment: z.uuid(),
 });
+
 export type DownloadParams = z.infer<typeof downloadParams>;
 
 export const sendParams = z
@@ -100,6 +109,7 @@ export const sendParams = z
   })
   .refine((params) => [params.text, params.html].some(Boolean), { message: "Provide text, html or both." })
   .refine((params) => [params.to, params.cc ?? [], params.bcc ?? []].flat().length <= MAX_RECIPIENTS, { message: `Use at most ${MAX_RECIPIENTS} recipients across to, cc and bcc.` });
+
 export type SendParams = z.infer<typeof sendParams>;
 
 export const replyParams = z
@@ -112,6 +122,7 @@ export const replyParams = z
     attachments: z.array(file).max(MAX_SEND_ATTACHMENTS).default([]),
   })
   .refine((params) => [params.text, params.html].some(Boolean), { message: "Provide text, html or both." });
+
 export type ReplyParams = z.infer<typeof replyParams>;
 
 export const forwardParams = z.object({
@@ -120,6 +131,7 @@ export const forwardParams = z.object({
   cc: addresses.optional(),
   text: body.describe("Optional note above the forwarded message."),
 });
+
 export type ForwardParams = z.infer<typeof forwardParams>;
 
 export const outgoing = z
@@ -142,6 +154,7 @@ export const sendFailure = z.object({
   code: z.string().startsWith("E_"),
   message: z.string(),
 });
+
 export type SendFailure = z.infer<typeof sendFailure>;
 
 export type File = z.infer<typeof file>;
@@ -289,4 +302,5 @@ export const categorizeResult = z.object({
   confidence: z.number().min(0).max(1),
   injection: z.number().min(0).max(1),
 });
+
 export type CategorizeResult = z.infer<typeof categorizeResult>;

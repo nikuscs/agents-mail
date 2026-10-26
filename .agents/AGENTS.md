@@ -4,7 +4,7 @@ A Cloudflare Worker that gives AI agents a mailbox: REST and MCP, behind one bea
 
 ## Code
 
-- The Worker is `apps/worker/src/worker.ts`: the layers (`makeDatabase`, `makeStorage`, `makeOutbox`, `makeClassifier`, `makeMail`, `makeMcp`) and the Hono app. Types and zod schemas live in `worker.types.ts`, constants in `worker.constants.ts`, pure helpers in `worker.utils.ts`.
+- The Worker lives in `apps/worker/src/`, one file per layer: `database.ts` (`makeDatabase`), `storage.ts` (`makeStorage`), `outbox.ts` (`makeOutbox`), `classifier.ts` (`makeClassifier`), `mail.ts` (`makeMail`), and `worker.ts` with `makeMcp` and the Hono app. Types and zod schemas live in `worker.types.ts`, the only file that imports `zod`; constants in `worker.constants.ts`, pure helpers in `worker.utils.ts`.
 - Method names are single words, Laravel style: `list`, `get`, `send`, `destroy`.
 - Types take the method's name: `send()` takes `SendParams` and returns `SendResult`, validated by the `sendParams` schema.
 - The code explains itself, so it carries no comments.
@@ -14,7 +14,7 @@ A Cloudflare Worker that gives AI agents a mailbox: REST and MCP, behind one bea
 
 - Test the main flows through the Worker's handlers (`fetch`, `email`, `scheduled`, MCP): the happy path plus each error path it has, one test per behaviour. Skip anything the types or zod already guarantee.
 - Keep each test small: merge assertions that share setup, and add a test only for a behaviour no other test covers.
-- Fake bindings and `fetch` with `tests/fakes.ts`, injected through `makeWorker(deps)` or the env; the suite has no `vi`.
+- Fake bindings and `fetch` with `tests/fakes.ts`, injected through `makeWorker(deps)` or the env; the suite has no `vi`. Call the handlers through `tests/client.ts`.
 - Every test starts clean: `tests/setup.ts` empties D1 and R2 before each one.
 
 ## Gotchas

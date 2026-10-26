@@ -19,14 +19,27 @@ export function makeOutbox(failure?: Error, during?: () => Promise<void>) {
   return { binding, messages };
 }
 
+class Unavailable extends Error {}
+
+export class SendError extends Error {
+  constructor(message: string, readonly code: string) {
+    super(message);
+  }
+}
+
 export function failing<T extends object>(target: T, method: keyof T, after = 0): T {
   let calls = 0;
+  const owns = (object: T, key: PropertyKey): key is keyof T => key in object;
 
   return new Proxy(target, {
     get(object, key) {
-      const value = Reflect.get(object, key);
+      if (!owns(object, key)) {
+        return undefined;
+      }
 
-      if (typeof value !== "function") {
+      const value = object[key];
+
+      if (!(value instanceof Function)) {
         return value;
       }
 
@@ -35,11 +48,11 @@ export function failing<T extends object>(target: T, method: keyof T, after = 0)
           calls += 1;
 
           if (calls > after) {
-            throw new Error(`${String(method)} unavailable`);
+            throw new Unavailable(`${String(method)} unavailable`);
           }
         }
 
-        return Reflect.apply(value, object, args);
+        return value.apply(object, args);
       };
     },
   });
