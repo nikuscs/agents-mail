@@ -60,6 +60,15 @@ Each layer is a `make*` factory that takes its binding or `env`; tests inject fa
     └── plans/                          committed plans, YYYY-MM-DD-<topic>.md
 ```
 
+### Test layout
+
+Every unit test in every app and package follows its source file:
+
+- **Folder:** the test sits at its source file's path with `src/` replaced by `tests/`. `apps/server/src/services/cart/cart-action.metadata.ts` → `apps/server/tests/services/cart/cart-action.metadata.test.ts`. No `actions/` or `queries/` subfolders (the source is flat), and no grouping folder the source doesn't have.
+- **Name:** `<source file name>.test.ts`, or `<source file name>.<topic>.test.ts` when one source file needs several test files (`mcp-tools.admin.catalog.test.ts`). A test named after a behaviour is named after the file it exercises instead; a test of a route or RPC handler sits under that route's mirrored path, and a test that covers several files goes with the entry point it calls.
+- **Packages test their own code:** a test of `packages/ui/src/utils/cn.ts` lives in `packages/ui/tests/utils/cn.test.ts`, not in an app.
+- **Shared test code keeps its folders:** `kits/`, `factories/`, `mocks/`, `support/`, `scenarios/`, `smoke/`, `e2e/` and setup files. `tests/architecture/` holds only checks no lint rule covers.
+
 ## 3. Standards
 
 - **Fewer files.** A function with one caller is inlined at that caller, and so is one with two callers and at most 3 lines. The `make*` layers stay: they are the seams tests inject fakes through.

@@ -8,6 +8,11 @@ const agentsRoot = import.meta.dirname;
 
 function link(source: string, target: string) {
   rmSync(target, { force: true, recursive: true });
+
+  if (!existsSync(source)) {
+    return;
+  }
+
   mkdirSync(dirname(target), { recursive: true });
   symlinkSync(relative(dirname(target), source), target);
 }
@@ -28,4 +33,8 @@ link(join(root, 'AGENTS.md'), join(root, 'CLAUDE.md'));
 linkEach(join(agentsRoot, 'skills'), join(root, '.claude/skills'));
 linkEach(join(agentsRoot, 'agents'), join(root, '.claude/agents'));
 
-console.log('Linked CLAUDE.md and .claude/');
+for (const config of ['paseo.json', 'orca.yaml']) {
+  link(join(agentsRoot, 'orchestrators', config), join(root, config));
+}
+
+console.log('Linked CLAUDE.md, .claude/ and the orchestrator configs');
