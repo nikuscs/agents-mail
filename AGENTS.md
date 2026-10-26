@@ -25,7 +25,7 @@ Agents never edit these on their own. Propose the exact diff and wait for the us
 
 ## Releases
 
-`bun run release` (patch by default, or `release:patch` / `release:minor` / `release:major`) needs notes under `## Unreleased` in `CHANGELOG.md`. The skill in `skills/agents-mail/SKILL.md` ships with every release.
+`bun run release` (patch by default, or `release:minor` / `release:major`) needs notes under `## Unreleased` in `CHANGELOG.md`. The skill in `skills/agents-mail/SKILL.md` ships with every release.
 
 ## Validation
 

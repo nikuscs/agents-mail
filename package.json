@@ -20,7 +20,6 @@
     "deploy": "bun scripts/worker-deploy.ts",
     "release": "bun scripts/utils-release.ts",
     "release:dry-run": "bun scripts/utils-release.ts --dry-run",
-    "release:patch": "bun scripts/utils-release.ts patch",
     "release:minor": "bun scripts/utils-release.ts minor",
     "release:major": "bun scripts/utils-release.ts major"
   },

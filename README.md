@@ -195,7 +195,6 @@ Add notes under `## Unreleased` in `CHANGELOG.md`, commit, then on a clean, push
 
 ```bash
 bun run release          # patch (default)
-bun run release:patch
 bun run release:minor
 bun run release:major
 bun run release:dry-run  # checks and shows the next version, changes nothing
