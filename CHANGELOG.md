@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.0.2 - 2026-10-27
+
 - Code restructured to the `oxlint-plugin-arch` 0.12 architecture rules; the Worker, MCP tools and deploy behave the same.
 - Pull requests run lint, typecheck, dead-code, cycle and test checks plus a workflow security audit.
 - GitHub releases are gated behind the `release` environment.

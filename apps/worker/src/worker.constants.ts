@@ -2,7 +2,7 @@ import type { WorkerCategory } from "./worker.types";
 import type { ContentfulStatusCode } from "hono/utils/http-status";
 import type { HtmlToTextOptions } from "html-to-text";
 
-export const WORKER_VERSION = "0.0.1";
+export const WORKER_VERSION = "0.0.2";
 
 export const WORKER_SUSPICIOUS = 0.8;
 
