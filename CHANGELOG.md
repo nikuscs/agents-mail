@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Code restructured to the `oxlint-plugin-arch` 0.12 architecture rules; the Worker, MCP tools and deploy behave the same.
+- Pull requests run lint, typecheck, dead-code, cycle and test checks plus a workflow security audit.
+- GitHub releases are gated behind the `release` environment.
+- The README opens with the Agents Mail banner.
+
 ## 0.0.1 - 2026-09-30
 
 - Catch-all inbox on Cloudflare Email Routing: emails in D1, attachments in R2, full addressing kept, including the SMTP recipient.
