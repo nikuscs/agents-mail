@@ -46,8 +46,6 @@ if (!unreleased) {
 }
 
 await $`bun run check`;
-await $`bun run lint`;
-await $`bun run test`;
 
 const { version } = await Bun.file(join(ROOT, "package.json")).json();
 const [major = 0, minor = 0, patch = 0] = version.split(".").map(Number);

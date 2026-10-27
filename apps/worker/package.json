@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
-    "types": "wrangler types --strict-vars=false",
-    "check": "tsc --noEmit",
+    "cf-typegen": "wrangler types --strict-vars=false",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "lint": "oxlint src/ tests/ vitest.config.ts -c ../../oxlint.config.ts --tsconfig tsconfig.json --disable-nested-config",
     "lint:fix": "oxlint src/ tests/ vitest.config.ts -c ../../oxlint.config.ts --tsconfig tsconfig.json --disable-nested-config --fix"

@@ -179,10 +179,13 @@ JEV runs after the email is saved, so a JEV failure never loses mail. It reads e
 
 ```bash
 cp apps/worker/.dev.vars.example apps/worker/.dev.vars
-bun run dev      # local Worker with local D1 and R2
-bun run check    # types
-bun run lint     # oxlint, zero warnings
-bun run test     # vitest in the Workers runtime
+bun run dev          # local Worker with local D1 and R2
+bun run check        # the full gate: typecheck, lint, lint:dead and test
+bun run typecheck    # types
+bun run lint         # oxlint, zero warnings
+bun run lint:dead    # fallow dead code
+bun run lint:cycles  # fallow import cycles
+bun run test         # vitest in the Workers runtime
 ```
 
 Schema changes go in a new file in `apps/worker/migrations/`. Never edit one that shipped: deployed databases record migrations by filename and would skip the change.
@@ -198,7 +201,7 @@ bun run release:major
 bun run release:dry-run  # checks and shows the next version, changes nothing
 ```
 
-It runs check, lint and test, asks before tagging, bumps every version (packages, MCP server, skill), then pushes `vX.Y.Z`. The Release workflow re-runs CI and publishes the GitHub release from the changelog.
+It runs `bun run check`, asks before tagging, bumps every version (packages, MCP server, skill), then pushes `vX.Y.Z`. The Release workflow re-runs CI and publishes the GitHub release from the changelog.
 
 ## 📄 License
 

@@ -1,4 +1,5 @@
-name: CI
+name: ✅ CI
+run-name: ✅ CI
 
 on:
   push:
@@ -8,9 +9,43 @@ on:
 
 permissions: {}
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
+  changes:
+    name: 🔍 Detect Changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: read # dorny/paths-filter needs PR metadata to compute the diff
+    outputs:
+      code: ${{ github.event_name != 'pull_request' || steps.filter.outputs.code == 'true' }}
+    steps:
+      - name: 🔍 Filter Paths
+        id: filter
+        if: github.event_name == 'pull_request'
+        uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4.0.3
+        with:
+          filters: |
+            code:
+              - apps/**
+              - package.json
+              - bun.lock
+              - bunfig.toml
+              - turbo.json
+              - oxlint.config.ts
+              - .fallowrc.json
+              - scripts/**
+              - .agents/**
+              - .github/workflows/**
+
   check:
-    name: ${{ matrix.task }}
+    name: ${{ matrix.name }}
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -18,26 +53,31 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        task: [check, lint, test]
+        include:
+          - { name: 🧹 Lint, task: lint }
+          - { name: ✅ Typecheck, task: typecheck }
+          - { name: 🪦 Dead code, task: "lint:dead" }
+          - { name: 🔁 Cycles, task: "lint:cycles" }
+          - { name: 🧪 Tests, task: "test:ci" }
 
     steps:
-      - name: Checkout
+      - name: 📥 Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
 
-      - name: Set up Bun
+      - name: 🥟 Set Up Bun
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:
           bun-version: 1.4.2
 
-      - name: Install dependencies
-        run: bun install --frozen-lockfile
+      - name: 📦 Install Dependencies
+        run: bun install --frozen-lockfile --ignore-scripts
 
-      - name: Seed Worker env names
+      - name: 🔑 Seed Worker Env Names
         run: cp apps/worker/.dev.vars.example apps/worker/.dev.vars
 
-      - name: Run ${{ matrix.task }}
+      - name: ▶️ Run ${{ matrix.task }}
         env:
           TASK: ${{ matrix.task }}
         run: bun run "$TASK"

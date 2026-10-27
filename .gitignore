@@ -10,3 +10,9 @@ node_modules/
 .turbo/
 .wrangler/
 worker-configuration.d.ts
+**/.fallow/
+
+# Linked by bun run agents:sync
+/CLAUDE.md
+.claude/skills/
+.claude/agents/

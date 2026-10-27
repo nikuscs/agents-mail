@@ -1,9 +1,9 @@
 #!/usr/bin/env bun
+import config from "agents-mail/wrangler.jsonc";
 import { $ } from "bun";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { parseEnv } from "node:util";
-import config from "../apps/worker/wrangler.jsonc";
 
 const NAME = config.name;
 const DATABASE = config.d1_databases[0].database_name;
@@ -98,6 +98,7 @@ async function secrets() {
     AGENTS_MAIL_JEV: jev = "",
     AGENTS_MAIL_JEV_KEY: key = "",
   } = parseEnv(await Bun.file(SECRETS).text());
+
   const address = /<([^<>]+)>\s*$/.exec(from)?.[1] ?? from;
   const domain = address.split("@").at(-1)?.replace(/\.$/, "").toLowerCase();
 
