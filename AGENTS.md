@@ -33,4 +33,4 @@ Agents never edit these on their own. Propose the exact diff and wait for the us
 bun run check
 ```
 
-`check` runs typecheck, lint (oxlint and fallow cycles), `lint:dead` and the tests, with zero warnings. A change users can see (feature, tool, route or setting) ships with its docs, the way a human would: the README section it touches, a line under `## Unreleased` in `CHANGELOG.md`, and the skill when tools or setup change. After changing agent files, run `bun run agents:sync`.
+`check` runs typecheck, lint, `lint:dead` and the tests, with zero warnings; CI also runs `lint:cycles`. A change users can see (feature, tool, route or setting) ships with its docs, the way a human would: the README section it touches, a line under `## Unreleased` in `CHANGELOG.md`, and the skill when tools or setup change. After changing agent files, run `bun run agents:sync`.

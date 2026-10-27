@@ -12,9 +12,10 @@ concurrency:
 
 jobs:
   check:
-    uses: ./.github/workflows/ci.yml
+    uses: $/.github/workflows/ci.yml
     permissions:
       contents: read
+      pull-requests: read # ci.yml's Detect Changes job requests it
 
   release:
     name: GitHub release
