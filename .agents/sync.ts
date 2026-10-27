@@ -1,15 +1,26 @@
 #!/usr/bin/env bun
 
-import { existsSync, mkdirSync, readdirSync, rmSync, symlinkSync } from 'node:fs';
+import { existsSync, lstatSync, mkdirSync, readdirSync, rmSync, symlinkSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
 
 const root = dirname(import.meta.dirname);
 const agentsRoot = import.meta.dirname;
 
+function removeLink(target: string) {
+  if (lstatSync(target, { throwIfNoEntry: false })?.isSymbolicLink()) {
+    rmSync(target);
+  }
+}
+
 function link(source: string, target: string) {
-  rmSync(target, { force: true, recursive: true });
+  removeLink(target);
 
   if (!existsSync(source)) {
+    return;
+  }
+
+  if (lstatSync(target, { throwIfNoEntry: false })) {
+    console.log(`Skipped ${relative(root, target)}: a real file or folder is there`);
     return;
   }
 
@@ -18,7 +29,9 @@ function link(source: string, target: string) {
 }
 
 function linkEach(sourceDir: string, targetDir: string) {
-  rmSync(targetDir, { force: true, recursive: true });
+  for (const entry of existsSync(targetDir) ? readdirSync(targetDir) : []) {
+    removeLink(join(targetDir, entry));
+  }
 
   if (!existsSync(sourceDir)) {
     return;
