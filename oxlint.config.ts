@@ -7,6 +7,7 @@ export default preset({
       style: { quotes: "double" },
       rules: { "arch/layout-chain": ["error", { groups: [{ min: 3, methods: ["map", "filter", "reduce", "flatMap", "find", "some", "every", "sort"] }] }] },
     },
+    ".agents": { console: true, style: { quotes: "single" } },
     "apps/worker": { types: { colocated: ["apps/worker/src/worker.types.ts"] } },
     "apps/worker/src": {
       rules: { "no-console": ["error", { allow: ["error"] }] },

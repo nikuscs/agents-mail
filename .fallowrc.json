@@ -4,7 +4,9 @@
     "scripts/**/*.ts",
     ".agents/sync.ts"
   ],
-  "ignorePatterns": [],
+  "ignorePatterns": [
+    "!.agents/**"
+  ],
   "dynamicallyLoaded": [],
   "ignoreDependencies": [
     "bumpp",
